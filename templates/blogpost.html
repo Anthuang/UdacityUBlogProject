@@ -5,7 +5,11 @@
     <h1>{{ entry.owner }}'s post</h1>
     <a href="/"><button class="btn btn-danger">Back</button></a>
     <a href="/edit/{{ entry.key().id() }}"><button class="btn btn-success">Edit</button></a>
+    {% if liked %}
+    <a href="/like/{{ entry.key().id() }}"><button class="btn btn-primary disabled">Like</button></a>
+    {% else %}
     <a href="/like/{{ entry.key().id() }}"><button class="btn btn-primary">Like</button></a>
+    {% endif %}
     <a href="/delete/{{ entry.key().id() }}"><button class="btn btn-warning">Delete</button></a>
     <hr>
     <h2>{{ entry.title }}</h2>
@@ -15,7 +19,7 @@
     <h3 style="color: red">{{ error }}</h3>
 
     <hr>
-    <!-- <h2 class="text-center">Comments</h2>
+    <h2 class="text-center">Comments</h2>
     {% for c in comments %}
     <h4>{{ c.body }} - {{ c.owner }}</h4>
     {% endfor %}
@@ -24,7 +28,7 @@
         <textarea name="content" class="form-control"></textarea>
       </div>
       <input type="submit" class="btn btn-primary">
-    </form> -->
+    </form>
   </div>
 </div>
 {% endblock %}
