@@ -1,0 +1,30 @@
+{% extends "header.html" %}
+{% block body %}
+<div class="container">
+  <div class="jumbotron">
+    <h1>{{ entry.owner }}'s post</h1>
+    <a href="/"><button class="btn btn-danger">Back</button></a>
+    <a href="/edit/{{ entry.key().id() }}"><button class="btn btn-success">Edit</button></a>
+    <a href="/like/{{ entry.key().id() }}"><button class="btn btn-primary">Like</button></a>
+    <a href="/delete/{{ entry.key().id() }}"><button class="btn btn-warning">Delete</button></a>
+    <hr>
+    <h2>{{ entry.title }}</h2>
+    <h4>{{ entry.likes }} likes</h4>
+    <h3>{{ entry.body }}</h3>
+
+    <h3 style="color: red">{{ error }}</h3>
+
+    <hr>
+    <!-- <h2 class="text-center">Comments</h2>
+    {% for c in comments %}
+    <h4>{{ c.body }} - {{ c.owner }}</h4>
+    {% endfor %}
+    <form action="/newcomment/{{ entry.key().id() }}" method="POST">
+      <div class="form-group">
+        <textarea name="content" class="form-control"></textarea>
+      </div>
+      <input type="submit" class="btn btn-primary">
+    </form> -->
+  </div>
+</div>
+{% endblock %}

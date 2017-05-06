@@ -1,0 +1,22 @@
+{% extends "header.html" %}
+{% block body %}
+<div class="container">
+  <div class="jumbotron">
+    {% if can_edit %}
+    <h1>Edit post</h1>
+    <form action="/edit/{{ entry.key().id() }}" method="post">
+      <div class="form-group">
+        <label>Subject</label>
+        <input name="subject" value="{{ entry.title }}" class="form-control">
+        <label>Content</label>
+        <textarea name="content" class="form-control">{{ entry.body }}</textarea>
+      </div>
+      <input type="submit" class="btn btn-primary">
+    </form>
+    {% endif %}
+    <a href="/newpost/{{ entry.key().id() }}"><button class="btn btn-danger">Back</button></a>
+
+    <h3 style="color: red;">{{ error }}</h3>
+  </div>
+</div>
+{% endblock %}

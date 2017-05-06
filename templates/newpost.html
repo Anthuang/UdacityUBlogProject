@@ -1,0 +1,20 @@
+{% extends "header.html" %}
+{% block body %}
+<div class="container">
+  <div class="jumbotron">
+    <h1>New post</h1>
+    <form action="/newpost" method="post">
+      <div class="form-group">
+        <label>Subject</label>
+        <input name="subject" class="form-control">
+        <label>Content</label>
+        <textarea name="content" class="form-control"></textarea>
+      </div>
+      <input type="submit" class="btn btn-primary">
+    </form>
+    <a href="/"><button class="btn btn-danger">Back</button></a>
+  </div>
+</div>
+
+<h3 style="color: red;">{{ error }}</h3>
+{% endblock %}
