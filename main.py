@@ -10,12 +10,8 @@ from google.appengine.ext import db
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape = True)
 
-secret = 'BEE5939C97570E24D9D7151F5214FA4CB5C7'
-
-class BlogObj():
-    def __init__(self, entry, name):
-        self.entry = entry
-        self.name = name
+file = open('secret.txt', 'r')
+secret = file.read()
 
 class BlogPosts(db.Model):
     title = db.StringProperty(required = True)
