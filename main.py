@@ -148,7 +148,7 @@ class NewPost(Handler):
         if self.user:
             self.render('newpost.html')
         else:
-            self.redirect('/')
+            self.redirect('/login')
 
     def post(self):
         subject = self.request.get('subject')
@@ -165,6 +165,9 @@ class NewPostID(Handler):
     def get(self, post_id):
         if self.user:
             post = BlogPosts.get_by_id(int(post_id))
+            if not post:
+                self.error(404)
+                return
             comments = Comments.all().ancestor(post).order('created')
             liked = Likes.all().ancestor(post).filter('owner', self.user.username).get()
             if liked:
@@ -172,19 +175,22 @@ class NewPostID(Handler):
             else:
                 self.render('blogpost.html', entry=post, comments=comments, liked=False)
         else:
-            self.render('/')
+            self.render('/login')
 
 class Edit(Handler):
     def get(self, post_id):
         if self.user:
             post = BlogPosts.get_by_id(int(post_id))
+            if not post:
+                self.error(404)
+                return
             if self.user.username == post.owner:
                 self.render('editpost.html', entry=post, can_edit=True)
             else:
                 error = 'You cannot change posts you do not own'
                 self.render('editpost.html', entry=post, can_edit=False, error=error)
         else:
-            self.redirect('/')
+            self.redirect('/login')
 
     def post(self, post_id):
         subject = self.request.get('subject')
@@ -203,6 +209,9 @@ class Delete(Handler):
     def get(self, post_id):
         if self.user:
             post = BlogPosts.get_by_id(int(post_id))
+            if not post:
+                self.error(404)
+                return
             if self.user.username == post.owner:
                 post.delete()
                 self.redirect('/')
@@ -210,12 +219,15 @@ class Delete(Handler):
                 error = 'You cannot change posts you do not own'
                 self.render('editpost.html', entry=post, can_edit=False, error=error)
         else:
-            self.redirect('/')
+            self.redirect('/login')
 
 class Like(Handler):
     def get(self, post_id):
         if self.user:
             post = BlogPosts.get_by_id(int(post_id))
+            if not post:
+                self.error(404)
+                return
             if self.user.username != post.owner:
                 liked = Likes.all().ancestor(post).filter('owner', self.user.username).get()
                 if not liked:
@@ -230,13 +242,15 @@ class Like(Handler):
                 error = 'You cannot like your own post'
                 self.render('editpost.html', entry=post, can_edit=False, error=error)
         else:
-            self.redirect('/')
+            self.redirect('/login')
 
 class Comment(Handler):
     def post(self, post_id):
         content = self.request.get('content')
         post = BlogPosts.get_by_id(int(post_id))
-
+        if not post:
+            self.error(404)
+            return
         if self.user:
             if content:
                 comment = Comments(body=content, owner=self.user.username, parent=post)
@@ -245,7 +259,7 @@ class Comment(Handler):
             else:
                 self.render('blogpost.html', entry=post, error='Cannot submit an empty comment')
         else:
-            self.render('/')
+            self.redirect('/login')
 
 app = webapp2.WSGIApplication([
     ('/', Blog), ('/login', Login), ('/signup', Signup), ('/logout', Logout),

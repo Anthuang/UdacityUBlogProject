@@ -1,6 +1,23 @@
-# Instructions
-Simply go to https://pristine-abacus-163901.appspot.com/
+# Instructions for development
+1. Clone the repository in any directory of your choosing.
+```
+git clone https://github.com/Anthuang/ublog.git
+```
+2. Install Google App Engine [here](https://cloud.google.com/appengine/docs/standard/python/download).
+3. Open a terminal and go to the project folder containing the repo.
+4. Type the following command in the terminal to run the project:
+```
+dev_appserver.py .
+```
+5. Open browser and go to localhost:8080 to view the site.
 
-To access the blog, you must create an account. On subsequent visits, you must use the username and password that you created to access your account.
-
-Posts can be edited or deleted by the user who owns it, and this can be done by clicking on the posts. Posts can also be liked and commented on in the same manner. Note that users cannot like their own posts.
+# Instructions for deploying
+1. Open a terminal and go to the project folder containing the repo.
+2. Type the following command in the terminal:
+```
+gcloud app deploy
+```
+3. To see the site, go to the url in the terminal or run the following command:
+```
+gcloud app browse
+```
