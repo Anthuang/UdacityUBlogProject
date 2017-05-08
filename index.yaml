@@ -12,43 +12,14 @@ indexes:
 
 - kind: BlogPosts
   properties:
-  - name: ancestor
-  - name: created
-    direction: desc
-
-- kind: BlogPosts
-  properties:
   - name: parent
   - name: created
     direction: desc
 
-- kind: BlogPosts
-  ancestor: yes
-  properties:
-  - name: created
-    direction: desc
-
 - kind: Comments
   properties:
   - name: post
   - name: created
-
-- kind: Comments
-  properties:
-  - name: post
-  - name: created
-    direction: desc
-
-- kind: Comments
-  ancestor: yes
-  properties:
-  - name: created
-
-- kind: Comments
-  ancestor: yes
-  properties:
-  - name: created
-    direction: desc
 
 - kind: Users
   properties:
