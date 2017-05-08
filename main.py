@@ -21,8 +21,8 @@ class BlogPosts(db.Model):
     created = db.DateTimeProperty(auto_now_add = True)
 
 class Comments(db.Model):
+    post = db.ReferenceProperty(BlogPosts, collection_name='comments')
     body = db.TextProperty(required = True)
-    owner = db.StringProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)
 
 class Likes(db.Model):
@@ -168,7 +168,7 @@ class NewPostID(Handler):
             if not post:
                 self.error(404)
                 return
-            comments = Comments.all().ancestor(post).order('created')
+            comments = post.comments.order('created')
             liked = Likes.all().ancestor(post).filter('owner', self.user.username).get()
             if liked:
                 self.render('blogpost.html', entry=post, comments=comments, liked=True)
@@ -253,7 +253,7 @@ class Comment(Handler):
             return
         if self.user:
             if content:
-                comment = Comments(body=content, owner=self.user.username, parent=post)
+                comment = Comments(post=post, body=content)
                 comment.put()
                 self.redirect('/newpost/' + post_id)
             else:
@@ -261,9 +261,52 @@ class Comment(Handler):
         else:
             self.redirect('/login')
 
+class DeleteComment(Handler):
+    def get(self, comment_id):
+        if self.user:
+            comment = Comments.get_by_id(int(comment_id))
+            if not comment:
+                self.error(404)
+                return
+            if self.user.username == comment.post.owner:
+                comment.delete()
+                self.redirect('/newpost/' + str(comment.post.key().id()))
+            else:
+                error = 'You cannot delete comments you do not own'
+                self.render('editpost.html', entry=comment, can_edit=False, error=error)
+        else:
+            self.redirect('/login')
+
+class EditComment(Handler):
+    def get(self, comment_id):
+        if self.user:
+            comment = Comments.get_by_id(int(comment_id))
+            if not comment:
+                self.error(404)
+                return
+            if self.user.username == comment.post.owner:
+                self.render('editcomment.html', comment=comment)
+            else:
+                error = 'You cannot change posts you do not own'
+                self.render('editpost.html', entry=comment.post, can_edit=False, error=error)
+        else:
+            self.redirect('/login')
+
+    def post(self, comment_id):
+        content = self.request.get('content')
+
+        if content:
+            comment = Comments.get_by_id(int(comment_id))
+            comment.body = content
+            comment.put()
+            self.redirect('/newpost/' + str(comment.post.key().id()))
+        else:
+            self.render('editcomment.html', error='Please fill out both fields!')
+
 app = webapp2.WSGIApplication([
     ('/', Blog), ('/login', Login), ('/signup', Signup), ('/logout', Logout),
     ('/newpost', NewPost), ('/newpost/(\d+)', NewPostID),
     ('/edit/(\d+)', Edit), ('/delete/(\d+)', Delete),
-    ('/like/(\d+)', Like), ('/newcomment/(\d+)', Comment)
+    ('/like/(\d+)', Like), ('/newcomment/(\d+)', Comment),
+    ('/deletecomment/(\d+)', DeleteComment), ('/editcomment/(\d+)', EditComment)
 ], debug=True)

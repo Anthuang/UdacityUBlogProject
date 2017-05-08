@@ -29,6 +29,17 @@ indexes:
     direction: desc
 
 - kind: Comments
+  properties:
+  - name: post
+  - name: created
+
+- kind: Comments
+  properties:
+  - name: post
+  - name: created
+    direction: desc
+
+- kind: Comments
   ancestor: yes
   properties:
   - name: created

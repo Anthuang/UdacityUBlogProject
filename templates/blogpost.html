@@ -21,8 +21,11 @@
     <hr>
     <h2 class="text-center">Comments</h2>
     {% for c in comments %}
-    <h4>{{ c.body }} - {{ c.owner }}</h4>
+    <h4>{{ c.body }} - {{ c.post.owner }}</h4>
+    <a href="/editcomment/{{ c.key().id() }}"><button class="btn btn-success">Edit</button></a>
+    <a href="/deletecomment/{{ c.key().id() }}"><button class="btn btn-warning">Delete</button></a>
     {% endfor %}
+    <hr>
     <form action="/newcomment/{{ entry.key().id() }}" method="POST">
       <div class="form-group">
         <textarea name="content" class="form-control"></textarea>
