@@ -56,6 +56,9 @@ class EditComment(Handler):
 
             if content:
                 comment = Comments.get_by_id(int(comment_id))
+                if not comment:
+                    self.error(404)
+                    return
                 comment.body = content
                 comment.put()
                 self.redirect('/newpost/' + str(comment.post.key().id()))

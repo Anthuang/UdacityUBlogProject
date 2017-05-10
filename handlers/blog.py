@@ -69,6 +69,9 @@ class Edit(Handler):
 
             if subject and content:
                 post = BlogPosts.get_by_id(int(post_id))
+                if not post:
+                    self.error(404)
+                    return
                 post.title = subject
                 post.body = content
                 post.put()
