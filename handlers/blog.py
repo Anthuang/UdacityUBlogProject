@@ -62,6 +62,9 @@ class Edit(Handler):
             if not post:
                 self.error(404)
                 return
+            if self.user.username != post.owner:
+                error = 'You cannot change comments you do not own'
+                self.render('editpost.html', entry=comment.post, can_edit=False, error=error)
             post.title = subject
             post.body = content
             post.put()
